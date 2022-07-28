@@ -13,7 +13,7 @@ function LinearProgressWithLabel(props) {
 		  <h2 align="center" className="TodoCounter"> {completedTodos} from {totalTodos} Todo Completed</h2>
         <LinearProgress variant="determinate" {...props} />
       </Box>
-      <Box sx={{ minWidth: percentCompletedTodos }}>
+      <Box sx={{ minWidth: 100 }}>
         <Typography variant="body2" color="text.secondary">{`${Math.round(
           props.value,
         )}%`}</Typography>

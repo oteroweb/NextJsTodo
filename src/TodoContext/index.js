@@ -14,7 +14,8 @@ function TodoProvider(props) {
   const [openModal, setOpenModal] = React.useState(false);
 
   const completedTodos = todos.filter(todo => !!todo.completed).length;
-  const percentCompletedTodos = ((todos.filter(todo => !!todo.completed).length)/todos.length)*100;
+  const percent = ((todos.filter(todo => !!todo.completed).length)/todos.length)*100;
+  const percentCompletedTodos = (Number.isNaN(percent) ? 100 : percent );
   const totalTodos = todos.length;
 
   let searchedTodos = [];
