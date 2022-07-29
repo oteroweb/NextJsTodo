@@ -9,13 +9,15 @@ import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { TodoContext } from '@src/TodoContext';
+import { LoginButton } from '@components/Login';
+import { ProfileImage } from '@components/ProfileImage'
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -57,8 +59,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+export default function NavBar() {
 	const { searchValue, setSearchValue } = React.useContext(TodoContext);
+	const { user, isAuthenticated, logout } = useAuth0();
 
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -101,8 +104,11 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Sign in </MenuItem>
+	 {isAuthenticated && (
+		 <MenuItem  onClick={handleMenuClose}>{user.name}</MenuItem>
+		 )}
+		 <MenuItem onClick={() => logout({ returnTo: window.location.origin })}>Logout</MenuItem>
+     
     </Menu>
   );
 
@@ -152,8 +158,10 @@ export default function PrimarySearchAppBar() {
           color="inherit"
         >
           <AccountCircle />
+		  
         </IconButton>
         <p>Profile</p>
+		
       </MenuItem>
     </Menu>
   );
@@ -165,22 +173,13 @@ export default function PrimarySearchAppBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography
             variant="h6"
             noWrap
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
           >
-            MUI
+            Todo list
           </Typography>
           <Search>
             <SearchIconWrapper>
@@ -194,7 +193,9 @@ export default function PrimarySearchAppBar() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
-          <Box sx={{ flexGrow: 1 }} />
+          <Box textAlign="right" sx={{ flexGrow: 1 }} >  
+	 		 <LoginButton />
+		  </Box>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
            
             <IconButton
@@ -206,7 +207,7 @@ export default function PrimarySearchAppBar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
+              <ProfileImage />
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
@@ -223,7 +224,9 @@ export default function PrimarySearchAppBar() {
           </Box>
         </Toolbar>
       </AppBar>
+
       {renderMobileMenu}
+
       {renderMenu}
     </Box>
   );
